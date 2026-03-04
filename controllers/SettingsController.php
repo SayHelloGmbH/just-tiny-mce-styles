@@ -35,7 +35,16 @@ class SettingsController extends Controller
 		$model->loadDefaults([
 			'features' => ['selector', 'classes', 'editor_css'],
 		]);
-		$model->load($_POST) && $model->save();
+		// process POST with nonce & capability checks
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			if (! isset($_POST['_wpnonce']) || ! wp_verify_nonce($_POST['_wpnonce'], 'just-nonce')) {
+				wp_die(__('Invalid request.'), '', 403);
+			}
+			if (! current_user_can('manage_options')) {
+				wp_die(__('Permission denied.'), '', 403);
+			}
+			$model->load($_POST) && $model->save();
+		}
 
 		// load template
 		return $this->render('settings/index', [
