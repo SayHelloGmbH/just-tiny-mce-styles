@@ -13,13 +13,13 @@ use jtmce\models\Settings;
 
 			<p>
 				<input type="radio" name="source" id="jtmce_read_db"
-					   value="<?php echo Settings::CONF_SOURCE_DB; ?>" <?php  checked($model->source, Settings::CONF_SOURCE_DB); ?>/>
+					value="<?php echo Settings::CONF_SOURCE_DB; ?>" <?php checked($model->source, Settings::CONF_SOURCE_DB); ?> />
 				<label for="jtmce_read_db"><?php _e('<b>Database</b>. All settings will be stored in wp_options table.'); ?></label>
 			</p>
 
 			<p>
 				<input type="radio" name="source" id="jtmce_read_file"
-					   value="<?php echo Settings::CONF_SOURCE_THEME; ?>" <?php checked($model->source, Settings::CONF_SOURCE_THEME); ?>/>
+					value="<?php echo Settings::CONF_SOURCE_THEME; ?>" <?php checked($model->source, Settings::CONF_SOURCE_THEME); ?> />
 				<label for="jtmce_read_file">
 					<?php _e('<b>Active theme</b>. All settings will be stored inside the active theme with .json file.'); ?>
 				</label>
@@ -39,11 +39,10 @@ use jtmce\models\Settings;
 			<p>You can enable or disable editing of different style formats controls. Full documentation is available on <a href="https://codex.wordpress.org/TinyMCE_Custom_Styles" target="_blank">codex.wordpress.org</a></p>
 
 			<input type="hidden" name="features" value="">
-			<?php foreach( \jtmce\models\Formats::getFeaturesList() as $key => $description ) : ?>
-
+			<?php foreach (\jtmce\models\Formats::getFeaturesList() as $key => $description) : ?>
 				<p>
 					<input type="checkbox" name="features[]" id="jtmce_feature_<?php echo $key; ?>"
-						   value="<?php echo $key; ?>" <?php checked( in_array($key, (array)$model->features), true ); ?> >
+						value="<?php echo $key; ?>" <?php checked(in_array($key, (array)$model->features), true); ?>>
 					<label for="jtmce_feature_<?php echo $key; ?>">
 						<?php echo "<b>$key</b><br>" . nl2br(esc_html($description)); ?>
 					</label>
@@ -69,18 +68,18 @@ use jtmce\models\Settings;
 	}
 </style>
 <script type="text/javascript">
-	( function( $ ) {
+	(function($) {
 
 		$(document).ready(function() {
-			$('#jtmce_settings input[name=source]').click(function(){
+			$('#jtmce_settings input[name=source]').click(function() {
 
 				$('div.jtmce_source_theme_wrapper').hide();
-				if ( $(this).val() == '<?php echo Settings::CONF_SOURCE_THEME; ?>' ) {
+				if ($(this).val() == '<?php echo Settings::CONF_SOURCE_THEME; ?>') {
 					$('div.jtmce_source_theme_wrapper').show();
 				}
 			})
 			$('#jtmce_settings input[name=source]:checked').click();
 		})
 
-	}( jQuery ));
+	}(jQuery));
 </script>

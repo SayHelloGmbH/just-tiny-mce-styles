@@ -5,7 +5,7 @@ namespace jtmce\core;
 class Singleton
 {
 	/**
-	 * Refers to a single instance of this class. 
+	 * Refers to a single instance of this class.
 	 */
 	protected static $instance = null;
 
@@ -16,7 +16,7 @@ class Singleton
 	 */
 	public static function getInstance()
 	{
-		if ( null === static::$instance ) {
+		if (null === static::$instance) {
 			static::$instance = new static();
 		}
 
@@ -25,7 +25,7 @@ class Singleton
 
 	/**
 	 * Alias for creating object of *Singleton* pattern
-	 * 
+	 *
 	 * @return Singleton A single instance of this class.
 	 */
 	public static function run()
@@ -37,19 +37,15 @@ class Singleton
 	 * Protected constructor to prevent creating a new instance of the
 	 * *Singleton* via the `new` operator from outside of this class.
 	 */
-	protected function __construct()
-	{
-	}
+	protected function __construct() {}
 
 	/**
 	 * Private clone method to prevent cloning of the instance of the
 	 * *Singleton* instance.
-	 * 
+	 *
 	 * @return void
 	 */
-	private function __clone()
-	{
-	}
+	private function __clone() {}
 
 	/**
 	 * Private unserialize method to prevent unserializing of the *Singleton*
@@ -57,8 +53,5 @@ class Singleton
 	 *
 	 * @return void
 	 */
-	private function __wakeup()
-	{
-	}
-
+	private function __wakeup() {}
 }

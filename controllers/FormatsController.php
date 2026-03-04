@@ -15,11 +15,11 @@ class FormatsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', array( $this, 'adminMenu' ));
+		add_action('admin_menu', [$this, 'adminMenu']);
 
-		if ( isset($_GET['page']) && strpos($_GET['page'], 'jtmce_') !== FALSE ) {
-			add_action('admin_init', array( $this, 'addScripts' ));
-			add_action('admin_init', array( $this, 'addStyles' ));
+		if (isset($_GET['page']) && strpos($_GET['page'], 'jtmce_') !== false) {
+			add_action('admin_init', [$this, 'addScripts']);
+			add_action('admin_init', [$this, 'addStyles']);
 		}
 	}
 
@@ -30,7 +30,7 @@ class FormatsController extends Controller
 	{
 		$page_title = __('TinyMCE Custom Styles');
 
-		add_options_page($page_title, $page_title, 'manage_options', 'jtmce_formats', array( $this, 'actionIndex' ));
+		add_options_page($page_title, $page_title, 'manage_options', 'jtmce_formats', [$this, 'actionIndex']);
 	}
 
 	/**
@@ -40,14 +40,23 @@ class FormatsController extends Controller
 	{
 		$model = new Formats();
 		$features = Settings::getFeaturesEnabled();
-		$model->load($_POST) && $model->save();
+		// process POST with nonce & capability checks
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			if (! isset($_POST['_wpnonce']) || ! wp_verify_nonce($_POST['_wpnonce'], 'just-nonce')) {
+				wp_die(__('Invalid request.'), '', 403);
+			}
+			if (! current_user_can('manage_options')) {
+				wp_die(__('Permission denied.'), '', 403);
+			}
+			$model->load($_POST) && $model->save();
+		}
 
 		// load template
-		return $this->render('formats/index', array(
-				'tab' => 'formats',
-				'model' => $model,
-				'features' => $features,
-		));
+		return $this->render('formats/index', [
+			'tab' => 'formats',
+			'model' => $model,
+			'features' => $features,
+		]);
 	}
 
 	/**
@@ -58,8 +67,8 @@ class FormatsController extends Controller
 		$slug = 'justcoded-multifield';
 		wp_register_script(
 			$slug,
-			plugins_url( '/assets/js/jcforms-multifield.js' , dirname(__FILE__) ),
-			array( 'jquery', 'json2', 'jquery-form', 'jquery-ui-sortable' )
+			plugins_url('/assets/js/jcforms-multifield.js', dirname(__FILE__)),
+			['jquery', 'json2', 'jquery-form', 'jquery-ui-sortable']
 		);
 		wp_enqueue_script($slug);
 	}
@@ -69,7 +78,7 @@ class FormatsController extends Controller
 	 */
 	public function addStyles()
 	{
-		wp_register_style('justcoded-multifield', plugins_url( '/assets/css/jcforms-multifield.css' , dirname(__FILE__) ) );
+		wp_register_style('justcoded-multifield', plugins_url('/assets/css/jcforms-multifield.css', dirname(__FILE__)));
 		wp_enqueue_style('justcoded-multifield');
 	}
 }
