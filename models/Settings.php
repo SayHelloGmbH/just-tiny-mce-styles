@@ -132,6 +132,11 @@ class Settings extends Model
 			$this->source_theme_file = trim($this->source_theme_file);
 			$this->source_theme_file = ltrim($this->source_theme_file, '/');
 
+			// reject traversal segments explicitly
+			if (strpos($this->source_theme_file, '..') !== false) {
+				$this->addError('invalid_source_theme_file');
+			}
+
 			if (empty($this->source_theme_file) || !preg_match('/\.json$/', strtolower($this->source_theme_file))) {
 				$this->addError('invalid_source_theme_file');
 			} else {
