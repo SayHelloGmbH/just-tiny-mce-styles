@@ -147,8 +147,25 @@ class Model
 		$self = get_class($this);
 		foreach ($params as $key => $value) {
 			if (property_exists($self, $key) && (!$defaults || is_null($this->$key))) {
-				$this->$key = is_array($value) ? $value : strip_tags(trim($value));
+				$this->$key = is_array($value) ? $this->sanitizeRecursive($value) : strip_tags(trim($value));
 			}
 		}
+	}
+
+	/**
+	 * Recursively sanitize array values from user input
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	protected function sanitizeRecursive($value)
+	{
+		if (is_array($value)) {
+			$out = [];
+			foreach ($value as $k => $v) {
+				$out[$k] = is_array($v) ? $this->sanitizeRecursive($v) : strip_tags(trim($v));
+			}
+			return $out;
+		}
+		return strip_tags(trim($value));
 	}
 }
