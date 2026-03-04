@@ -14,7 +14,7 @@ class SettingsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', array( $this, 'initRoutes' ));
+		add_action('admin_menu', [ $this, 'initRoutes' ]);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class SettingsController extends Controller
 	public function initRoutes()
 	{
 		$page_title = __('Settings', \JustTinyMceStyles::TEXTDOMAIN);
-		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_settings', array( $this, 'actionIndex' ));
+		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_settings', [ $this, 'actionIndex' ]);
 	}
 
 	/**
@@ -32,16 +32,15 @@ class SettingsController extends Controller
 	public function actionIndex()
 	{
 		$model = new Settings();
-		$model->loadDefaults(array(
-			'features' => array('selector', 'classes', 'editor_css'),
-		));
+		$model->loadDefaults([
+			'features' => ['selector', 'classes', 'editor_css'],
+		]);
 		$model->load($_POST) && $model->save();
 
 		// load template
-		return $this->render('settings/index', array(
-					'tab' => 'settings',
-					'model' => $model,
-		));
+		return $this->render('settings/index', [
+			'tab' => 'settings',
+			'model' => $model,
+		]);
 	}
-
 }

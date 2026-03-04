@@ -14,7 +14,7 @@ class PresetsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', array( $this, 'initRoutes' ));
+		add_action('admin_menu', [ $this, 'initRoutes' ]);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class PresetsController extends Controller
 	public function initRoutes()
 	{
 		$page_title = __('Presets', \JustTinyMceStyles::TEXTDOMAIN);
-		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_presets', array( $this, 'actionIndex' ));
+		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_presets', [ $this, 'actionIndex' ]);
 	}
 
 	/**
@@ -35,10 +35,9 @@ class PresetsController extends Controller
 		$model->load($_POST) && $model->import();
 
 		// load template
-		return $this->render('presets/index', array(
-					'tab' => 'presets',
-					'model' => $model,
-		));
+		return $this->render('presets/index', [
+			'tab' => 'presets',
+			'model' => $model,
+		]);
 	}
-
 }

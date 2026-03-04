@@ -45,5 +45,4 @@ abstract class DataLayer
 	{
 		$this->_formats = $formats;
 	}
-
 }

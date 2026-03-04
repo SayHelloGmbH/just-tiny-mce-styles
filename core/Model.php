@@ -44,35 +44,43 @@ class Model
 	 */
 	public function messageTemplates()
 	{
-		return array();
+		return [];
 	}
 
 	/**
 	 * Set errors
 	 * @param string $error
 	 */
-	public function addError( $error )
+	public function addError($error)
 	{
-		if ( is_null($this->_msgTpls) ) $this->_msgTpls = $this->messageTemplates();
+		if (is_null($this->_msgTpls)) {
+			$this->_msgTpls = $this->messageTemplates();
+		}
 
-		if ( isset($this->_msgTpls[$error]) ) $error = $this->_msgTpls[$error];
+		if (isset($this->_msgTpls[$error])) {
+			$error = $this->_msgTpls[$error];
+		}
 		$this->_errors[] = $error;
 
-		add_action('jtmce_print_admin_notice', array( $this, 'printMessages' ));
+		add_action('jtmce_print_admin_notice', [ $this, 'printMessages' ]);
 	}
 
 	/**
 	 * Set messages
 	 * @param string $message
 	 */
-	public function addMessage( $message )
+	public function addMessage($message)
 	{
-		if ( is_null($this->_msgTpls) ) $this->_msgTpls = $this->messageTemplates();
+		if (is_null($this->_msgTpls)) {
+			$this->_msgTpls = $this->messageTemplates();
+		}
 
-		if ( isset($this->_msgTpls[$message]) ) $message = $this->_msgTpls[$message];
+		if (isset($this->_msgTpls[$message])) {
+			$message = $this->_msgTpls[$message];
+		}
 		$this->_messages[] = $message;
 
-		add_action('jtmce_print_admin_notice', array( $this, 'printMessages' ));
+		add_action('jtmce_print_admin_notice', [ $this, 'printMessages' ]);
 	}
 
 	public function getErrors()
@@ -89,17 +97,18 @@ class Model
 	}
 
 	/**
-	 * Render notices 
+	 * Render notices
 	 * @param array $args
 	 * @return html
 	 */
-	public function printMessages( $args = array() )
+	public function printMessages($args = [])
 	{
-		if ( empty($this->_messages) && empty($this->_errors) )
+		if (empty($this->_messages) && empty($this->_errors)) {
 			return;
+		}
 
 		global $wp_version;
-		include( JTMCE_ROOT . '/views/_notices.php');
+		include(JTMCE_ROOT . '/views/_notices.php');
 	}
 
 	/**
@@ -107,9 +116,9 @@ class Model
 	 * @param array $params
 	 * @return boolean
 	 */
-	public function load( $params )
+	public function load($params)
 	{
-		if ( !empty($params) ) {
+		if (!empty($params)) {
 			$this->setAttributes($params);
 			return true;
 		}
@@ -121,9 +130,9 @@ class Model
 	 *
 	 * @param $params
 	 */
-	public function loadDefaults( $params )
+	public function loadDefaults($params)
 	{
-		if ( !empty($params) ) {
+		if (!empty($params)) {
 			$this->setAttributes($params, true);
 		}
 	}
@@ -133,13 +142,13 @@ class Model
 	 * @param array $params
 	 * @param boolean $defaults
 	 */
-	public function setAttributes( $params, $defaults = false )
+	public function setAttributes($params, $defaults = false)
 	{
 		$self = get_class($this);
-		foreach ( $params as $key => $value ) {
-			if ( property_exists($self, $key) && (!$defaults || is_null($this->$key)) )
+		foreach ($params as $key => $value) {
+			if (property_exists($self, $key) && (!$defaults || is_null($this->$key))) {
 				$this->$key = is_array($value) ? $value : strip_tags(trim($value));
+			}
 		}
 	}
-
 }

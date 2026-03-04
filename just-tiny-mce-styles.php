@@ -10,8 +10,8 @@ License: GPL2
 */
 
 define('JTMCE_ROOT', dirname(__FILE__));
-require_once( JTMCE_ROOT . '/core/helpers.php' );
-require_once( JTMCE_ROOT . '/core/Autoload.php' );
+require_once(JTMCE_ROOT . '/core/helpers.php');
+require_once(JTMCE_ROOT . '/core/Autoload.php');
 
 use jtmce\core;
 use jtmce\components;
@@ -21,14 +21,14 @@ class JustTinyMceStyles extends core\Singleton
 {
 	/**
 	 * Textual plugin name
-	 * 
-	 * @var string 
+	 *
+	 * @var string
 	 */
 	public static $pluginName;
 
 	/**
 	 * Current plugin version
-	 * 
+	 *
 	 * @var float
 	 */
 	public static $version;
@@ -40,7 +40,7 @@ class JustTinyMceStyles extends core\Singleton
 
 	/**
 	 * Plugin main entry point
-	 * 
+	 *
 	 * protected constructor prevents creating another plugin instance with "new" operator
 	 */
 	protected function __construct()
@@ -50,7 +50,9 @@ class JustTinyMceStyles extends core\Singleton
 		self::$version = 1.2;
 
 		// init features, which this plugin is created for
-		if ( !is_admin() ) return;
+		if (!is_admin()) {
+			return;
+		}
 		new components\TinyMceExt();
 		new controllers\FormatsController();
 		new controllers\SettingsController();
@@ -59,18 +61,17 @@ class JustTinyMceStyles extends core\Singleton
 	
 	/**
 	 * Checks WordPress version to be greater or equal to the control point
-	 * 
+	 *
 	 * @global string $wp_version		method uses global WP var
 	 * @param  string $control_version version to compare with
-	 * 
+	 *
 	 * @return boolean		true if WordPress version meets the requirements
 	 */
-	public static function wpVersion( $control_version )
+	public static function wpVersion($control_version)
 	{
 		global $wp_version;
 		return ( version_compare($wp_version, $control_version) >= 0 );
 	}
-
 }
 
 JustTinyMceStyles::run();

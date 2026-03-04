@@ -39,11 +39,10 @@ use jtmce\models\Settings;
 			<p>You can enable or disable editing of different style formats controls. Full documentation is available on <a href="https://codex.wordpress.org/TinyMCE_Custom_Styles" target="_blank">codex.wordpress.org</a></p>
 
 			<input type="hidden" name="features" value="">
-			<?php foreach( \jtmce\models\Formats::getFeaturesList() as $key => $description ) : ?>
-
+			<?php foreach (\jtmce\models\Formats::getFeaturesList() as $key => $description) : ?>
 				<p>
 					<input type="checkbox" name="features[]" id="jtmce_feature_<?php echo $key; ?>"
-						   value="<?php echo $key; ?>" <?php checked( in_array($key, (array)$model->features), true ); ?> >
+						   value="<?php echo $key; ?>" <?php checked(in_array($key, (array)$model->features), true); ?> >
 					<label for="jtmce_feature_<?php echo $key; ?>">
 						<?php echo "<b>$key</b><br>" . nl2br(esc_html($description)); ?>
 					</label>

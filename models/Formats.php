@@ -8,7 +8,6 @@
 
 namespace jtmce\models;
 
-
 use jtmce\core\Model;
 
 class Formats extends Model
@@ -28,7 +27,7 @@ class Formats extends Model
 
 	public static function getFeaturesList()
 	{
-		return array(
+		return [
 			'type' => __("You can create \"Group title\", single \"Style rule\" or a HTML \"Wrapper\" of block elements. For example a div wrapper or a blockquote.\n By default you're creating \"Style rules\"."),
 			'selector' => __("CSS 3 selector pattern to find elements within the selection by. This can be used to apply classes to specific elements or complex things like odd rows in a table. Note that if you combine both selector and block then you can get more nuanced behavior where the button changes the class of the selected tag by default, but adds the block tag around the cursor if the selected tag isn't found."),
 			'inline' => __("Name of the inline element to produce for example “span”. The current text selection will be wrapped in this inline element."),
@@ -38,30 +37,32 @@ class Formats extends Model
 			'attributes' => __("Name/value object with attributes to apply to the selected elements or the new inline/block element."),
 			'exact' => __("Disables the merge similar styles feature when used. This is needed for some CSS inheritance issues such as text-decoration for underline/strikethrough."),
 			'editor_css' => __("CSS 3 rules to apply to the TinyMCE editor to display your format in special way."),
-		);
+		];
 	}
 
 	public static function getFeaturesControls()
 	{
-		return array(
-			'type' => array( __('Type'), 'select', 'items' => array(
+		return [
+			'type' => [ __('Type'), 'select', 'items' => [
 				self::TYPE_ITEM => 'Style format',
 				self::TYPE_WRAPPER => 'Tag wrapper',
-				self::TYPE_GROUP => 'Group title' )
-			),
-			'title' => array( __('Title'), 'text' ),
-			'selector' => array( __('Tag Selector'), 'text' ),
-			'inline' => array( __('Inline Tag name'), 'text' ),
-			'block' => array( __('Block Tag name'), 'text' ),
-			'classes' => array( __('Class Attribute value'), 'text' ),
-			'styles' => array( __('Style Attribute value'), 'text' ),
-			'attributes' => array( __('HTML Attributes'), 'text'  ),
-			'exact' => array( __('Merge styles'), 'select', 'items' => array(
+				self::TYPE_GROUP => 'Group title'
+			]
+			],
+			'title' => [ __('Title'), 'text' ],
+			'selector' => [ __('Tag Selector'), 'text' ],
+			'inline' => [ __('Inline Tag name'), 'text' ],
+			'block' => [ __('Block Tag name'), 'text' ],
+			'classes' => [ __('Class Attribute value'), 'text' ],
+			'styles' => [ __('Style Attribute value'), 'text' ],
+			'attributes' => [ __('HTML Attributes'), 'text'  ],
+			'exact' => [ __('Merge styles'), 'select', 'items' => [
 				0 => 'Merge Styles',
-				1 => 'Do not merge Styles' )
-			),
-			'editor_css' => array( __('Editor additional CSS rules'), 'textarea' ),
-		);
+				1 => 'Do not merge Styles'
+			]
+			],
+			'editor_css' => [ __('Editor additional CSS rules'), 'textarea' ],
+		];
 	}
 
 	/**
@@ -71,9 +72,9 @@ class Formats extends Model
 	 */
 	public function messageTemplates()
 	{
-		return array(
+		return [
 			'updated' => __('<strong>Style Formats</strong> configuration has been updated.', \JustTinyMceStyles::TEXTDOMAIN),
-		);
+		];
 	}
 
 	/**
@@ -83,11 +84,12 @@ class Formats extends Model
 	 */
 	public function save()
 	{
-		if ( !$this->validateFormats() )
+		if (!$this->validateFormats()) {
 			return false;
+		}
 		
 		$this->_dL->setFormats($this->formats);
-		if ( $this->_dL->save() ) {
+		if ($this->_dL->save()) {
 			$this->addMessage('updated');
 			return true;
 		}
@@ -99,26 +101,27 @@ class Formats extends Model
 	 */
 	public function validateFormats()
 	{
-		if ( empty($this->formats) || !is_array($this->formats) ) {
-			$this->formats = array();
+		if (empty($this->formats) || !is_array($this->formats)) {
+			$this->formats = [];
 			return true;
 		}
 
 		// clean up empty values
 		$this->formats = array_values($this->formats);
 		foreach ($this->formats as $row => $format) {
-			foreach ( $format as $key => $value ) {
+			foreach ($format as $key => $value) {
 				$value = trim($value);
-				if ( empty($value) )
+				if (empty($value)) {
 					unset($format[$key]);
+				}
 			}
 
 			// set default type
-			if ( !isset($format['type']) ) {
+			if (!isset($format['type'])) {
 				$format['type'] = self::TYPE_ITEM;
 			}
 			// set wrapper parameter based on type
-			if ( $format['type'] == self::TYPE_WRAPPER ) {
+			if ($format['type'] == self::TYPE_WRAPPER) {
 				$format['wrapper'] = 1;
 			}
 
@@ -129,24 +132,24 @@ class Formats extends Model
 		foreach ($this->formats as $row => $format) {
 			$row_human = $row + 1;
 			$row_error = false;
-			$selector_features = array_intersect(array('selector', 'inline', 'block'), array_keys($format));
-			$attributes_features = array_intersect(array('classes', 'styles', 'attributes'), array_keys($format));
+			$selector_features = array_intersect(['selector', 'inline', 'block'], array_keys($format));
+			$attributes_features = array_intersect(['classes', 'styles', 'attributes'], array_keys($format));
 			$type = isset($format['type'])? $format['type'] : self::TYPE_ITEM;
 
-			if ( empty($format['title']) ) {
+			if (empty($format['title'])) {
 				$row_error = true;
-				$this->addError(strtr(__("<strong>Row {row}:</strong> Title is empty."), array('{row}' => $row_human)));
+				$this->addError(strtr(__("<strong>Row {row}:</strong> Title is empty."), ['{row}' => $row_human]));
 			}
-			if ( empty($selector_features) && $type != self::TYPE_GROUP ) {
+			if (empty($selector_features) && $type != self::TYPE_GROUP) {
 				$row_error = true;
-				$this->addError(strtr(__("<strong>Row {row}:</strong> Please set selector/inline/block field."), array('{row}' => $row_human)));
+				$this->addError(strtr(__("<strong>Row {row}:</strong> Please set selector/inline/block field."), ['{row}' => $row_human]));
 			}
-			if ( empty($attributes_features) && $type != self::TYPE_GROUP ) {
+			if (empty($attributes_features) && $type != self::TYPE_GROUP) {
 				$row_error = true;
-				$this->addError(strtr(__("<strong>Row {row}:</strong> Please set one of html modificator fields."), array('{row}' => $row_human)));
+				$this->addError(strtr(__("<strong>Row {row}:</strong> Please set one of html modificator fields."), ['{row}' => $row_human]));
 			}
 
-			if ( $row_error ) {
+			if ($row_error) {
 				$this->formats[$row]['_hasError'] = true;
 			}
 		}

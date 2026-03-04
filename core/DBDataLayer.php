@@ -16,15 +16,15 @@ class DBDataLayer extends DataLayer
 	 */
 	public function getFormats($refresh = false)
 	{
-		if ( !is_null($this->_formats) & !$refresh ) {
+		if (!is_null($this->_formats) & !$refresh) {
 			return $this->_formats;
 		}
 
-		$this->_formats = array();
-		if ( $value = get_option(self::OPT_NAME) ) {
+		$this->_formats = [];
+		if ($value = get_option(self::OPT_NAME)) {
 			$value = @base64_decode($value);
 			$value = @unserialize($value);
-			if ( $value ) {
+			if ($value) {
 				$this->_formats = $value;
 			}
 		}
@@ -44,12 +44,10 @@ class DBDataLayer extends DataLayer
 
 		// check that values are the same. if they are the same update will return false, which is not correct. save is successfull in this case
 		$old_value = get_option(self::OPT_NAME);
-		if ( $value === $old_value ) {
+		if ($value === $old_value) {
 			return true;
-		}
-		else {
+		} else {
 			return update_option(self::OPT_NAME, $value);
 		}
 	}
-
 }

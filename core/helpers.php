@@ -1,11 +1,16 @@
 <?php
 
-if ( !function_exists('pa') ) {
-	function pa( $mixed, $stop = false ) {
-		$ar = debug_backtrace(); $key = pathinfo($ar[0]['file']); $key = $key['basename'] . ':' . $ar[0]['line'];
-		$print = array( $key => $mixed ); echo( '<pre>' . htmlentities(print_r($print, 1)) . '</pre>' );
-		if ( $stop == 1 )
+if (!function_exists('pa')) {
+	function pa($mixed, $stop = false)
+	{
+		$ar = debug_backtrace();
+		$key = pathinfo($ar[0]['file']);
+		$key = $key['basename'] . ':' . $ar[0]['line'];
+		$print = [ $key => $mixed ];
+		echo( '<pre>' . htmlentities(print_r($print, 1)) . '</pre>' );
+		if ($stop == 1) {
 			exit();
+		}
 	}
 }
 
@@ -14,36 +19,39 @@ if ( !function_exists('pa') ) {
  * @param string $json Data of settings for fields
  * @return string Return formated json string with settings for fields
  */
-function jtmce_format_json( $json ) {
+function jtmce_format_json($json)
+{
 	$result = '';
 	$level = 0;
 	$in_quotes = false;
 	$in_escape = false;
-	$ends_line_level = NULL;
-	$json_length = strlen( $json );
+	$ends_line_level = null;
+	$json_length = strlen($json);
 
-	for( $i = 0; $i < $json_length; $i++ ) {
+	for ($i = 0; $i < $json_length; $i++) {
 		$char = $json[$i];
-		$new_line_level = NULL;
+		$new_line_level = null;
 		$post = "";
-		if( $ends_line_level !== NULL ) {
+		if ($ends_line_level !== null) {
 			$new_line_level = $ends_line_level;
-			$ends_line_level = NULL;
+			$ends_line_level = null;
 		}
-		if ( $in_escape ) {
+		if ($in_escape) {
 			$in_escape = false;
-		} else if( $char === '"' ) {
+		} elseif ($char === '"') {
 			$in_quotes = !$in_quotes;
-		} else if( ! $in_quotes ) {
-			switch( $char ) {
-				case '}': case ']':
-				$level--;
-				$ends_line_level = NULL;
-				$new_line_level = $level;
-				break;
+		} elseif (! $in_quotes) {
+			switch ($char) {
+				case '}':
+				case ']':
+					$level--;
+					$ends_line_level = null;
+					$new_line_level = $level;
+					break;
 
-				case '{': case '[':
-				$level++;
+				case '{':
+				case '[':
+					$level++;
 				case ',':
 					$ends_line_level = $level;
 					break;
@@ -52,17 +60,20 @@ function jtmce_format_json( $json ) {
 					$post = " ";
 					break;
 
-				case " ": case "\t": case "\n": case "\r":
-				$char = "";
-				$ends_line_level = $new_line_level;
-				$new_line_level = NULL;
-				break;
+				case " ":
+				case "\t":
+				case "\n":
+				case "\r":
+							$char = "";
+							$ends_line_level = $new_line_level;
+							$new_line_level = null;
+					break;
 			}
-		} else if ( $char === '\\' ) {
+		} elseif ($char === '\\') {
 			$in_escape = true;
 		}
-		if( $new_line_level !== NULL ) {
-			$result .= "\n".str_repeat( "\t", $new_line_level );
+		if ($new_line_level !== null) {
+			$result .= "\n".str_repeat("\t", $new_line_level);
 		}
 		$result .= $char.$post;
 	}
@@ -76,12 +87,12 @@ function jtmce_format_json( $json ) {
  * @param string $filename File path
  * @return boolean
  */
-function jtmce_set_chmod( $filename ) {
+function jtmce_set_chmod($filename)
+{
 	$dir_perms = fileperms(dirname($filename));
-	if ( @chmod($filename, $dir_perms) ) {
+	if (@chmod($filename, $dir_perms)) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }

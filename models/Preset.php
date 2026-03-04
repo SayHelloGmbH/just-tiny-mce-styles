@@ -17,27 +17,28 @@ class Preset extends Model
 	 */
 	public function import()
 	{
-		if ( !$this->validate() ) return false;
+		if (!$this->validate()) {
+			return false;
+		}
 
 		$preset_src = plugin_dir_path(__FILE__) . '/../presets/' . $this->preset_file;
 		$data = FilesDataLayer::readFormatsFile($preset_src);
-		if ( empty($data) ) {
+		if (empty($data)) {
 			$this->addError('preset_file_error');
 		}
 
-		if ( ! $this->overwrite ) {
+		if (! $this->overwrite) {
 			$current_formats = $this->_dL->getFormats();
 			$data = array_merge($current_formats, $data);
 		}
 
 		$model = new Formats();
 		$model->formats = $data;
-		if ( $model->save() ) {
+		if ($model->save()) {
 			$this->maybeEnableItemType($model->formats);
 			$this->addMessage('imported');
 			return true;
-		}
-		else {
+		} else {
 			$this->addError('import_failed');
 			return false;
 		}
@@ -50,13 +51,13 @@ class Preset extends Model
 	 */
 	public function validate()
 	{
-		if ( empty($this->preset_file) ) {
+		if (empty($this->preset_file)) {
 			$this->addError('empty_preset');
 			return false;
 		}
 
 		$preset_src = plugin_dir_path(__FILE__) . '/../presets/' . $this->preset_file;
-		if ( !is_file($preset_src) ) {
+		if (!is_file($preset_src)) {
 			$this->addError('preset_file_missing');
 			return false;
 		}
@@ -74,16 +75,16 @@ class Preset extends Model
 		$item_type_required = false;
 
 		foreach ($formats as $row => $format) {
-			if ( isset($format['type']) && $format['type'] != Formats::TYPE_ITEM ) {
+			if (isset($format['type']) && $format['type'] != Formats::TYPE_ITEM) {
 				$item_type_required = true;
 				break;
 			}
 		}
 
-		if ( $item_type_required ) {
+		if ($item_type_required) {
 			$settings = new Settings();
 			$settings->features = Settings::getFeaturesEnabled();
-			if ( !in_array('type', $settings->features) ) {
+			if (!in_array('type', $settings->features)) {
 				array_unshift($settings->features, 'type');
 				return $settings->updateFeatures();
 			}
@@ -98,12 +99,12 @@ class Preset extends Model
 	 */
 	public function messageTemplates()
 	{
-		return array(
+		return [
 			'empty_preset' => __('<strong>Error!</strong> Please select preset to continue.', \JustTinyMceStyles::TEXTDOMAIN),
 			'preset_file_missing' => __('<strong>Error!</strong> Could not read chosen preset file.', \JustTinyMceStyles::TEXTDOMAIN),
 			'preset_file_error' => __('<strong>Error!</strong> Preset file is corrupted.', \JustTinyMceStyles::TEXTDOMAIN),
 			'import_failed' => __('<strong>Error!</strong> Could not write new settings to current storage.', \JustTinyMceStyles::TEXTDOMAIN),
 			'imported' => __('<strong>Congratulations!</strong> You have imported the preset.', \JustTinyMceStyles::TEXTDOMAIN),
-		);
+		];
 	}
 }
