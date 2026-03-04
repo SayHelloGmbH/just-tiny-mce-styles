@@ -14,7 +14,7 @@ class PresetsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', array( $this, 'initRoutes' ));
+		add_action('admin_menu', [$this, 'initRoutes']);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class PresetsController extends Controller
 	public function initRoutes()
 	{
 		$page_title = __('Presets', \JustTinyMceStyles::TEXTDOMAIN);
-		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_presets', array( $this, 'actionIndex' ));
+		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_presets', [$this, 'actionIndex']);
 	}
 
 	/**
@@ -32,13 +32,21 @@ class PresetsController extends Controller
 	public function actionIndex()
 	{
 		$model = new Preset();
-		$model->load($_POST) && $model->import();
+		// process POST with nonce & capability checks
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			if (! isset($_POST['_wpnonce']) || ! wp_verify_nonce($_POST['_wpnonce'], 'just-nonce')) {
+				wp_die(__('Invalid request.'), '', 403);
+			}
+			if (! current_user_can('manage_options')) {
+				wp_die(__('Permission denied.'), '', 403);
+			}
+			$model->load($_POST) && $model->import();
+		}
 
 		// load template
-		return $this->render('presets/index', array(
-					'tab' => 'presets',
-					'model' => $model,
-		));
+		return $this->render('presets/index', [
+			'tab' => 'presets',
+			'model' => $model,
+		]);
 	}
-
 }

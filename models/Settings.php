@@ -35,8 +35,8 @@ class Settings extends Model
 	{
 		$opt = get_site_option(self::OPT_FEATURES_ENABLED, '');
 
-		$features = array();
-		if ( !empty($opt) ) {
+		$features = [];
+		if (!empty($opt)) {
 			$features = explode(',', $opt);
 		}
 		return $features;
@@ -60,7 +60,7 @@ class Settings extends Model
 		$params['source'] = self::getDataSourceType();
 		$params['source_theme_file'] = self::getDataSourceThemeFile();
 		$features = self::getFeaturesEnabled();
-		if ( !empty($features) ) {
+		if (!empty($features)) {
 			$params['features'] = $features;
 		}
 		parent::loadDefaults($params);
@@ -72,7 +72,7 @@ class Settings extends Model
 	 */
 	public function save()
 	{
-		if ( !$this->validateDataSource() || !$this->validateFeatures() ) {
+		if (!$this->validateDataSource() || !$this->validateFeatures()) {
 			return false;
 		}
 
@@ -85,11 +85,12 @@ class Settings extends Model
 	 */
 	protected function updateDataSource()
 	{
-		if ( !$this->validateDataSource() )
+		if (!$this->validateDataSource()) {
 			return false;
+		}
 
 		update_site_option(self::OPT_SOURCE, $this->source);
-		if ( self::CONF_SOURCE_THEME == $this->source ) {
+		if (self::CONF_SOURCE_THEME == $this->source) {
 			update_site_option(self::OPT_THEME_FILE, $this->source_theme_file);
 		}
 		$this->addMessage('source_updated');
@@ -103,17 +104,17 @@ class Settings extends Model
 	 */
 	public function messageTemplates()
 	{
-		return array(
+		return [
 			'empty_source' => __('<strong>Settings storage update FAILED!</strong>. Choose an option for the data storage', \JustTinyMceStyles::TEXTDOMAIN),
 			'empty_features' => __('<strong>Features update FAILED!</strong>. Please choose features to use.', \JustTinyMceStyles::TEXTDOMAIN),
 			'empty_selector_features' => __('<strong>Features update FAILED!</strong>. Please choose at least one selector/inline/block.', \JustTinyMceStyles::TEXTDOMAIN),
 			'empty_attributes_features' => __('<strong>Features update FAILED!</strong>. Please choose at least one feature which modify html attributes.', \JustTinyMceStyles::TEXTDOMAIN),
 			'invalid_source_theme_file' => __('<strong>Settings storage update FAILED!</strong>. Check that you specified .json file name for theme file path', \JustTinyMceStyles::TEXTDOMAIN),
-			'theme_not_writable' => __('<strong>Settings storage update FAILED!</strong>. Check that directory is writable: ' . dirname(get_stylesheet_directory().'/'.$this->source_theme_file), \JustTinyMceStyles::TEXTDOMAIN),
+			'theme_not_writable' => __('<strong>Settings storage update FAILED!</strong>. Check that directory is writable: ' . dirname(get_stylesheet_directory() . '/' . $this->source_theme_file), \JustTinyMceStyles::TEXTDOMAIN),
 
 			'source_updated' => __('<strong>Settings storage</strong> configurations has been updated.', \JustTinyMceStyles::TEXTDOMAIN),
 			'features_updated' => __('<strong>Features</strong> configuration has been updated.', \JustTinyMceStyles::TEXTDOMAIN),
-		);
+		];
 	}
 
 	/**
@@ -122,20 +123,24 @@ class Settings extends Model
 	 */
 	public function validateDataSource()
 	{
-		if ( empty($this->source) ) {
+		if (empty($this->source)) {
 			$this->addError('empty_source');
 			return false;
 		}
 
-		if ( self::CONF_SOURCE_THEME == $this->source ) {
+		if (self::CONF_SOURCE_THEME == $this->source) {
 			$this->source_theme_file = trim($this->source_theme_file);
 			$this->source_theme_file = ltrim($this->source_theme_file, '/');
 
-			if ( empty($this->source_theme_file) || !preg_match('/\.json$/', strtolower($this->source_theme_file)) ) {
+			// reject traversal segments explicitly
+			if (strpos($this->source_theme_file, '..') !== false) {
 				$this->addError('invalid_source_theme_file');
 			}
-			else {
-				$parent_dir = dirname( FilesDataLayer::getFilePath($this->source_theme_file) );
+
+			if (empty($this->source_theme_file) || !preg_match('/\.json$/', strtolower($this->source_theme_file))) {
+				$this->addError('invalid_source_theme_file');
+			} else {
+				$parent_dir = dirname(FilesDataLayer::getFilePath($this->source_theme_file));
 				if (!wp_mkdir_p($parent_dir) || !is_writable($parent_dir)) {
 					$this->addError('theme_not_writable');
 				}
@@ -152,18 +157,18 @@ class Settings extends Model
 	 */
 	public function validateFeatures()
 	{
-		if ( empty($this->features) || !is_array($this->features) ) {
+		if (empty($this->features) || !is_array($this->features)) {
 			$this->addError('empty_features');
 			return false;
 		}
 
-		$selector_features = array_intersect(array('selector', 'inline', 'block'), $this->features);
-		$attributes_features = array_intersect(array('classes', 'styles', 'attributes'), $this->features);
+		$selector_features = array_intersect(['selector', 'inline', 'block'], $this->features);
+		$attributes_features = array_intersect(['classes', 'styles', 'attributes'], $this->features);
 
-		if ( empty($selector_features) ) {
+		if (empty($selector_features)) {
 			$this->addError('empty_selector_features');
 		}
-		if ( empty($attributes_features) ) {
+		if (empty($attributes_features)) {
 			$this->addError('empty_attributes_features');
 		}
 
@@ -177,12 +182,12 @@ class Settings extends Model
 	 */
 	public function updateFeatures()
 	{
-		if ( !$this->validateFeatures() ) {
+		if (!$this->validateFeatures()) {
 			return false;
 		}
 
 		$value = implode(',', $this->features);
-		if ( update_site_option(self::OPT_FEATURES_ENABLED, $value) ) {
+		if (update_site_option(self::OPT_FEATURES_ENABLED, $value)) {
 			$this->addMessage('features_updated');
 			return true;
 		}

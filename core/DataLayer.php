@@ -18,9 +18,7 @@ abstract class DataLayer
 	/**
 	 * DataLayer constructor.
 	 */
-	public function __construct()
-	{
-	}
+	public function __construct() {}
 
 	/**
 	 * Method to find style formats from data storage
@@ -45,5 +43,4 @@ abstract class DataLayer
 	{
 		$this->_formats = $formats;
 	}
-
 }
