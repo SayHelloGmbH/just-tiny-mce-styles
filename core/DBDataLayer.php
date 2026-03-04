@@ -23,10 +23,17 @@ class DBDataLayer extends DataLayer
 
 		$this->_formats = [];
 		if ($value = get_option(self::OPT_NAME)) {
-			$value = @base64_decode($value);
-			$value = @unserialize($value);
-			if ($value) {
-				$this->_formats = $value;
+			$decoded = @base64_decode($value);
+			// try JSON first
+			$json = @json_decode($decoded, true);
+			if (is_array($json)) {
+				$this->_formats = $json;
+			} else {
+				// fallback to unserialize for older installs
+				$un = @unserialize($decoded);
+				if ($un && is_array($un)) {
+					$this->_formats = $un;
+				}
 			}
 		}
 
@@ -40,8 +47,8 @@ class DBDataLayer extends DataLayer
 	 */
 	public function save()
 	{
-		$value = serialize($this->_formats);
-		$value = base64_encode($value);
+		// prefer JSON storage (base64 encoded to keep parity)
+		$value = base64_encode(json_encode($this->_formats));
 
 		// check that values are the same. if they are the same update will return false, which is not correct. save is successfull in this case
 		$old_value = get_option(self::OPT_NAME);

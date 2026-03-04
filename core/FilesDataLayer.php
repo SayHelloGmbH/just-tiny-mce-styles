@@ -93,8 +93,30 @@ class FilesDataLayer extends DataLayer
 			$rel_file = Settings::getDataSourceThemeFile();
 		}
 
-		$file_path = get_stylesheet_directory() . '/' . ltrim($rel_file, '/');
+		$base_dir = wp_normalize_path(get_stylesheet_directory());
+
+		// normalize incoming relative file and collapse path segments to prevent traversal
+		$rel = ltrim(str_replace('\\', '/', $rel_file), '/');
+		$parts = [];
+		foreach (explode('/', $rel) as $segment) {
+			if ($segment === '' || $segment === '.') continue;
+			if ($segment === '..') {
+				array_pop($parts);
+				continue;
+			}
+			$parts[] = $segment;
+		}
+		$clean_rel = implode('/', $parts);
+
+		$file_path = wp_normalize_path($base_dir . '/' . $clean_rel);
 		$file_path = apply_filters('jtmce_config_file_path', $file_path);
+
+		// final safety: ensure path is inside the theme directory
+		$norm_base = rtrim($base_dir, '/') . '/';
+		if (strpos($file_path, $norm_base) !== 0) {
+			// fallback to a safe default inside theme
+			$file_path = $base_dir . '/editor-formats.json';
+		}
 
 		return $file_path;
 	}

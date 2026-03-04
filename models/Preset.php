@@ -56,8 +56,22 @@ class Preset extends Model
 			return false;
 		}
 
-		$preset_src = plugin_dir_path(__FILE__) . '/../presets/' . $this->preset_file;
-		if (!is_file($preset_src)) {
+		$presets_dir = wp_normalize_path(plugin_dir_path(__FILE__) . '/../presets/');
+		$candidate = wp_normalize_path($presets_dir . ltrim(str_replace('\\', '/', $this->preset_file), '/'));
+
+		// collapse path segments
+		$parts = [];
+		foreach (explode('/', $candidate) as $segment) {
+			if ($segment === '' || $segment === '.') continue;
+			if ($segment === '..') {
+				array_pop($parts);
+				continue;
+			}
+			$parts[] = $segment;
+		}
+		$candidate = implode('/', $parts);
+
+		if (strpos($candidate, rtrim($presets_dir, '/')) !== 0 || !is_file($candidate)) {
 			$this->addError('preset_file_missing');
 			return false;
 		}
