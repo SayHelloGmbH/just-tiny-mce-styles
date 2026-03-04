@@ -3,7 +3,7 @@
 Plugin Name: Just TinyMCE Custom Styles
 Description: Adds dropdown options for custom css classes and attributes for tags in WordPress TinyMCE Editor. This plugin was formerly managed by JustCoded / Alex Prokopenko.
 Tags: tinymce, editor, link class, custom styles, styles, tag class, link attributes, tag attributes, custom editor
-Version: 1.2.1
+Version: 1.3.0
 Author: Say Hello GmbH
 Author URI: http://sayhello.ch/
 License: GPL2
