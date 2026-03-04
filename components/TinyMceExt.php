@@ -105,9 +105,39 @@ class TinyMceExt extends \jtmce\core\Component
 		}
 
 		header("Content-Type: text/css; charset=" . get_bloginfo('charset'));
+
+		// helper to scope selectors to the editor content body
+		$scope_to_editor = function ($css) {
+			// remove @import and url() to reduce abuse
+			$css = preg_replace('/@import[^;]+;?/i', '', $css);
+			$css = preg_replace('/url\([^\)]+\)/i', '', $css);
+			$css = str_ireplace('expression(', '', $css);
+
+			// prefix selectors with .mce-content-body to avoid affecting TinyMCE UI
+			$scoped = preg_replace_callback('/([^{}]+)\{([^}]*)\}/s', function ($m) {
+				$selector = trim($m[1]);
+				$body = $m[2];
+				// leave at-rules (like @keyframes) untouched
+				if (strpos($selector, '@') === 0) {
+					return $selector . '{' . $body . '}';
+				}
+
+				$parts = array_map('trim', explode(',', $selector));
+				foreach ($parts as &$p) {
+					if (strpos($p, '.mce-content-body') === false) {
+						$p = '.mce-content-body ' . $p;
+					}
+				}
+				return implode(', ', $parts) . '{' . $body . '}';
+			}, $css);
+
+			return $scoped;
+		};
+
 		foreach ($model->formats as $style_format) {
 			if (!empty($style_format['editor_css'])) {
-				echo $style_format['editor_css'] . "\n";
+				$scoped = $scope_to_editor($style_format['editor_css']);
+				echo $scoped . "\n";
 			}
 		}
 	}
