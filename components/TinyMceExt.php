@@ -98,6 +98,12 @@ class TinyMceExt extends \jtmce\core\Component
 			return;
 		}
 
+		// restrict access: only users who can edit posts should fetch editor CSS
+		if (! current_user_can('edit_posts')) {
+			status_header(403);
+			exit;
+		}
+
 		header("Content-Type: text/css; charset=" . get_bloginfo('charset'));
 		foreach ($model->formats as $style_format) {
 			if (!empty($style_format['editor_css'])) {
