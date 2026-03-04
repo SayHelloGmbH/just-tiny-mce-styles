@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 7/19/16
- * Time: 13:44
- */
 
 namespace jtmce\models;
 
@@ -21,7 +15,7 @@ class Formats extends Model
 	public function __construct()
 	{
 		parent::__construct();
-		
+
 		$this->formats = $this->_dL->getFormats();
 	}
 
@@ -43,25 +37,31 @@ class Formats extends Model
 	public static function getFeaturesControls()
 	{
 		return [
-			'type' => [ __('Type'), 'select', 'items' => [
-				self::TYPE_ITEM => 'Style format',
-				self::TYPE_WRAPPER => 'Tag wrapper',
-				self::TYPE_GROUP => 'Group title'
-			]
+			'type' => [
+				__('Type'),
+				'select',
+				'items' => [
+					self::TYPE_ITEM => 'Style format',
+					self::TYPE_WRAPPER => 'Tag wrapper',
+					self::TYPE_GROUP => 'Group title'
+				]
 			],
-			'title' => [ __('Title'), 'text' ],
-			'selector' => [ __('Tag Selector'), 'text' ],
-			'inline' => [ __('Inline Tag name'), 'text' ],
-			'block' => [ __('Block Tag name'), 'text' ],
-			'classes' => [ __('Class Attribute value'), 'text' ],
-			'styles' => [ __('Style Attribute value'), 'text' ],
-			'attributes' => [ __('HTML Attributes'), 'text'  ],
-			'exact' => [ __('Merge styles'), 'select', 'items' => [
-				0 => 'Merge Styles',
-				1 => 'Do not merge Styles'
-			]
+			'title' => [__('Title'), 'text'],
+			'selector' => [__('Tag Selector'), 'text'],
+			'inline' => [__('Inline Tag name'), 'text'],
+			'block' => [__('Block Tag name'), 'text'],
+			'classes' => [__('Class Attribute value'), 'text'],
+			'styles' => [__('Style Attribute value'), 'text'],
+			'attributes' => [__('HTML Attributes'), 'text'],
+			'exact' => [
+				__('Merge styles'),
+				'select',
+				'items' => [
+					0 => 'Merge Styles',
+					1 => 'Do not merge Styles'
+				]
 			],
-			'editor_css' => [ __('Editor additional CSS rules'), 'textarea' ],
+			'editor_css' => [__('Editor additional CSS rules'), 'textarea'],
 		];
 	}
 
@@ -87,7 +87,7 @@ class Formats extends Model
 		if (!$this->validateFormats()) {
 			return false;
 		}
-		
+
 		$this->_dL->setFormats($this->formats);
 		if ($this->_dL->save()) {
 			$this->addMessage('updated');
@@ -134,7 +134,7 @@ class Formats extends Model
 			$row_error = false;
 			$selector_features = array_intersect(['selector', 'inline', 'block'], array_keys($format));
 			$attributes_features = array_intersect(['classes', 'styles', 'attributes'], array_keys($format));
-			$type = isset($format['type'])? $format['type'] : self::TYPE_ITEM;
+			$type = isset($format['type']) ? $format['type'] : self::TYPE_ITEM;
 
 			if (empty($format['title'])) {
 				$row_error = true;

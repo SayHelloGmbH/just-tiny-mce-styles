@@ -21,7 +21,7 @@ class DataLayerFactory
 		if (is_null($source_type)) {
 			$source_type = Settings::getDataSourceType();
 		}
-		
+
 		$layer_class = ($source_type == Settings::CONF_SOURCE_DB) ? 'DBDataLayer' : 'FilesDataLayer';
 		$layer_class = '\\jtmce\\core\\' . $layer_class;
 		return new $layer_class();

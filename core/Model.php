@@ -62,7 +62,7 @@ class Model
 		}
 		$this->_errors[] = $error;
 
-		add_action('jtmce_print_admin_notice', [ $this, 'printMessages' ]);
+		add_action('jtmce_print_admin_notice', [$this, 'printMessages']);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Model
 		}
 		$this->_messages[] = $message;
 
-		add_action('jtmce_print_admin_notice', [ $this, 'printMessages' ]);
+		add_action('jtmce_print_admin_notice', [$this, 'printMessages']);
 	}
 
 	public function getErrors()

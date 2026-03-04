@@ -13,7 +13,7 @@ class Autoloader
 	 */
 	public function __construct()
 	{
-		spl_autoload_register([ $this, 'loader' ]);
+		spl_autoload_register([$this, 'loader']);
 	}
 
 	/**

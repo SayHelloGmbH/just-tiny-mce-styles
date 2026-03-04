@@ -15,11 +15,11 @@ class FormatsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', [ $this, 'adminMenu' ]);
+		add_action('admin_menu', [$this, 'adminMenu']);
 
 		if (isset($_GET['page']) && strpos($_GET['page'], 'jtmce_') !== false) {
-			add_action('admin_init', [ $this, 'addScripts' ]);
-			add_action('admin_init', [ $this, 'addStyles' ]);
+			add_action('admin_init', [$this, 'addScripts']);
+			add_action('admin_init', [$this, 'addStyles']);
 		}
 	}
 
@@ -30,7 +30,7 @@ class FormatsController extends Controller
 	{
 		$page_title = __('TinyMCE Custom Styles');
 
-		add_options_page($page_title, $page_title, 'manage_options', 'jtmce_formats', [ $this, 'actionIndex' ]);
+		add_options_page($page_title, $page_title, 'manage_options', 'jtmce_formats', [$this, 'actionIndex']);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class FormatsController extends Controller
 		wp_register_script(
 			$slug,
 			plugins_url('/assets/js/jcforms-multifield.js', dirname(__FILE__)),
-			[ 'jquery', 'json2', 'jquery-form', 'jquery-ui-sortable' ]
+			['jquery', 'json2', 'jquery-form', 'jquery-ui-sortable']
 		);
 		wp_enqueue_script($slug);
 	}

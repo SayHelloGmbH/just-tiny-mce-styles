@@ -18,7 +18,7 @@ class TinyMceExt extends \jtmce\core\Component
 		add_filter('tiny_mce_before_init', [$this, 'setCustomFormats']);
 
 		add_filter('mce_css', [$this, 'setCustomFormatsCssUrl']);
-		add_action('wp_ajax_jtmce_editor_css', [ $this, 'customFormatsCss' ]);
+		add_action('wp_ajax_jtmce_editor_css', [$this, 'customFormatsCss']);
 	}
 
 	/**
@@ -52,7 +52,7 @@ class TinyMceExt extends \jtmce\core\Component
 		$group_i = null;
 
 		foreach ($formats as $i => $item) {
-			$type = isset($item['type'])? $item['type'] : Formats::TYPE_ITEM;
+			$type = isset($item['type']) ? $item['type'] : Formats::TYPE_ITEM;
 			if ($type == Formats::TYPE_GROUP) {
 				$formats[$i]['items'] = [];
 				$group_i = $i;

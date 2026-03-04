@@ -6,8 +6,8 @@ if (!function_exists('pa')) {
 		$ar = debug_backtrace();
 		$key = pathinfo($ar[0]['file']);
 		$key = $key['basename'] . ':' . $ar[0]['line'];
-		$print = [ $key => $mixed ];
-		echo( '<pre>' . htmlentities(print_r($print, 1)) . '</pre>' );
+		$print = [$key => $mixed];
+		echo ('<pre>' . htmlentities(print_r($print, 1)) . '</pre>');
 		if ($stop == 1) {
 			exit();
 		}
@@ -64,18 +64,18 @@ function jtmce_format_json($json)
 				case "\t":
 				case "\n":
 				case "\r":
-							$char = "";
-							$ends_line_level = $new_line_level;
-							$new_line_level = null;
+					$char = "";
+					$ends_line_level = $new_line_level;
+					$new_line_level = null;
 					break;
 			}
 		} elseif ($char === '\\') {
 			$in_escape = true;
 		}
 		if ($new_line_level !== null) {
-			$result .= "\n".str_repeat("\t", $new_line_level);
+			$result .= "\n" . str_repeat("\t", $new_line_level);
 		}
-		$result .= $char.$post;
+		$result .= $char . $post;
 	}
 
 	return $result;

@@ -14,7 +14,7 @@ class SettingsController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		add_action('admin_menu', [ $this, 'initRoutes' ]);
+		add_action('admin_menu', [$this, 'initRoutes']);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class SettingsController extends Controller
 	public function initRoutes()
 	{
 		$page_title = __('Settings', \JustTinyMceStyles::TEXTDOMAIN);
-		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_settings', [ $this, 'actionIndex' ]);
+		add_submenu_page(null, $page_title, $page_title, 'manage_options', 'jtmce_settings', [$this, 'actionIndex']);
 	}
 
 	/**

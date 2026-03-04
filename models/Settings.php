@@ -110,7 +110,7 @@ class Settings extends Model
 			'empty_selector_features' => __('<strong>Features update FAILED!</strong>. Please choose at least one selector/inline/block.', \JustTinyMceStyles::TEXTDOMAIN),
 			'empty_attributes_features' => __('<strong>Features update FAILED!</strong>. Please choose at least one feature which modify html attributes.', \JustTinyMceStyles::TEXTDOMAIN),
 			'invalid_source_theme_file' => __('<strong>Settings storage update FAILED!</strong>. Check that you specified .json file name for theme file path', \JustTinyMceStyles::TEXTDOMAIN),
-			'theme_not_writable' => __('<strong>Settings storage update FAILED!</strong>. Check that directory is writable: ' . dirname(get_stylesheet_directory().'/'.$this->source_theme_file), \JustTinyMceStyles::TEXTDOMAIN),
+			'theme_not_writable' => __('<strong>Settings storage update FAILED!</strong>. Check that directory is writable: ' . dirname(get_stylesheet_directory() . '/' . $this->source_theme_file), \JustTinyMceStyles::TEXTDOMAIN),
 
 			'source_updated' => __('<strong>Settings storage</strong> configurations has been updated.', \JustTinyMceStyles::TEXTDOMAIN),
 			'features_updated' => __('<strong>Features</strong> configuration has been updated.', \JustTinyMceStyles::TEXTDOMAIN),

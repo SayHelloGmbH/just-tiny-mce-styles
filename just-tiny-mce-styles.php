@@ -58,7 +58,7 @@ class JustTinyMceStyles extends core\Singleton
 		new controllers\SettingsController();
 		new controllers\PresetsController();
 	}
-	
+
 	/**
 	 * Checks WordPress version to be greater or equal to the control point
 	 *
@@ -70,7 +70,7 @@ class JustTinyMceStyles extends core\Singleton
 	public static function wpVersion($control_version)
 	{
 		global $wp_version;
-		return ( version_compare($wp_version, $control_version) >= 0 );
+		return (version_compare($wp_version, $control_version) >= 0);
 	}
 }
 
